@@ -21,6 +21,8 @@
         <script src="./js/index.js" type="module"></script>-->
     <input type="file" id="imageLoader" name="imageLoader" />
     <canvas id="imageCanvas"></canvas>
+    <input type="text" id="textInput" placeholder="Enter text here" />
+    <button id="addTextBtn">Add Text</button>
     <button id="saveBtn">Save Image</button>
 
     <script>
@@ -28,25 +30,32 @@
         var canvas = document.getElementById('imageCanvas');
         var ctx = canvas.getContext('2d');
         var saveBtn = document.getElementById('saveBtn');
+        var addTextBtn = document.getElementById('addTextBtn');
+        var textInput = document.getElementById('textInput');
+        var img = new Image();
 
         imageLoader.addEventListener('change', handleImage, false);
         saveBtn.addEventListener('click', saveImage, false);
+        addTextBtn.addEventListener('click', addTextToImage, false);
 
         function handleImage(e) {
             var reader = new FileReader();
             reader.onload = function(event) {
-                var img = new Image();
                 img.onload = function() {
                     canvas.width = img.width;
                     canvas.height = img.height;
                     ctx.drawImage(img, 0, 0);
-                    ctx.font = '30px Arial';
-                    ctx.fillStyle = 'white';
-                    ctx.fillText('Your Text Here', 50, 50);
                 }
                 img.src = event.target.result;
             }
             reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function addTextToImage() {
+            var text = textInput.value;
+            ctx.font = '30px Arial';
+            ctx.fillStyle = 'white';
+            ctx.fillText(text, 50, 50);
         }
 
         function saveImage() {
