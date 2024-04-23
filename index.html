@@ -21,6 +21,12 @@
         ></script>
         <script src="./js/index.js" type="module"></script>-->
     <input type="file" id="imageLoader" name="imageLoader" />
+    <script>
+        function updateTextColor(picker) {
+            document.getElementById('textInput').style.color = picker.value;
+        }
+
+    </script>
     <canvas id="c" width="500" height="500"></canvas>
 
     <script>
@@ -37,7 +43,8 @@
                     image.set({
                         angle: 0,
                         padding: 10,
-                        cornersize: 10,
+                        cornerSize: 10,
+                        selectable: false // Make the image non-selectable
                     });
                     canvas.centerObject(image);
                     canvas.add(image);
@@ -59,6 +66,7 @@
         });
         canvas.add(text);
         text.bringToFront();
+        canvas.renderAll();
 
         // Make the canvas object (text) selectable and resizable
         text.set({
@@ -67,6 +75,16 @@
             cornerSize: 6,
             transparentCorners: false
         });
+
+        // Function to change text color
+        function changeTextColor(value) {
+            if (text) {
+                text.set({
+                    fill: value
+                });
+                canvas.renderAll();
+            }
+        }
 
         canvas.on('object:modified', function() {
             canvas.renderAll();
