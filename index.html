@@ -78,6 +78,81 @@
             canvas.renderAll();
         });
 
+        < body >
+            < h1 > Meme Generator < /h1>
+
+        < input type = "file"
+        id = "imageLoader"
+        name = "imageLoader" / >
+            < label
+        for = "textColorPicker" > Choose Text Color: < /label> < input type = "color"
+        id = "textColorPicker"
+        onchange = "changeTextColor(this.value)" >
+
+            < canvas id = "c"
+        width = "500"
+        height = "500" > < /canvas>
+
+        < script >
+            var canvas = new fabric.Canvas('c');
+        var text; // Declare text variable outside to make it globally accessible
+
+        document.getElementById('imageLoader').addEventListener('change', function(e) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var imgObj = new Image();
+                imgObj.src = event.target.result;
+                imgObj.onload = function() {
+                    var image = new fabric.Image(imgObj);
+                    image.scaleToWidth(canvas.width);
+                    image.set({
+                        angle: 0,
+                        padding: 10,
+                        cornerSize: 10,
+                        selectable: false // Make the image non-selectable
+                    });
+                    canvas.centerObject(image);
+                    canvas.add(image);
+                    canvas.renderAll();
+                }
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        // Add text after the image has been added to ensure it's on top
+        text = new fabric.IText('Tap and Type', {
+            left: 100,
+            top: 100,
+            fontFamily: 'arial',
+            fill: '#333',
+            fontSize: 50
+        });
+        canvas.add(text);
+        text.bringToFront();
+        canvas.renderAll();
+
+        // Make the canvas object (text) selectable and resizable
+        text.set({
+            borderColor: 'red',
+            cornerColor: 'green',
+            cornerSize: 6,
+            transparentCorners: false
+        });
+
+        // Function to change text color
+        function changeTextColor(value) {
+            if (text) {
+                text.set({
+                    fill: value
+                });
+                canvas.renderAll();
+            }
+        }
+
+        canvas.on('object:modified', function() {
+            canvas.renderAll();
+        });
+
         function saveImage() {
             // Ensure the canvas is fully rendered before exporting
             canvas.renderAll();
