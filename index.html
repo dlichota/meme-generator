@@ -33,6 +33,7 @@
                 imgObj.src = event.target.result;
                 imgObj.onload = function() {
                     var image = new fabric.Image(imgObj);
+                    image.scaleToWidth(canvas.width);
                     image.set({
                         angle: 0,
                         padding: 10,
