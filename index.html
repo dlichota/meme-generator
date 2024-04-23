@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meme Generator</title>
     <link rel="stylesheet" href="./css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
 </head>
 
 <body>
@@ -20,53 +21,54 @@
         ></script>
         <script src="./js/index.js" type="module"></script>-->
     <input type="file" id="imageLoader" name="imageLoader" />
-    <canvas id="imageCanvas"></canvas>
-    <input type="text" id="textInput" placeholder="Enter text here" />
-    <button id="addTextBtn">Add Text</button>
-    <button id="saveBtn">Save Image</button>
+    <canvas id="c" width="500" height="500"></canvas>
 
     <script>
-        var imageLoader = document.getElementById('imageLoader');
-        var canvas = document.getElementById('imageCanvas');
-        var ctx = canvas.getContext('2d');
-        var saveBtn = document.getElementById('saveBtn');
-        var addTextBtn = document.getElementById('addTextBtn');
-        var textInput = document.getElementById('textInput');
-        var img = new Image();
+        var canvas = new fabric.Canvas('c');
 
-        imageLoader.addEventListener('change', handleImage, false);
-        saveBtn.addEventListener('click', saveImage, false);
-        addTextBtn.addEventListener('click', addTextToImage, false);
-
-        function handleImage(e) {
+        document.getElementById('imageLoader').addEventListener('change', function(e) {
             var reader = new FileReader();
             reader.onload = function(event) {
-                img.onload = function() {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
+                var imgObj = new Image();
+                imgObj.src = event.target.result;
+                imgObj.onload = function() {
+                    var image = new fabric.Image(imgObj);
+                    image.set({
+                        angle: 0,
+                        padding: 10,
+                        cornersize: 10,
+                        height: 500,
+                        width: 500,
+                    });
+                    canvas.centerObject(image);
+                    canvas.add(image);
+                    canvas.renderAll();
                 }
-                img.src = event.target.result;
             }
             reader.readAsDataURL(e.target.files[0]);
-        }
+        });
 
-        function addTextToImage() {
-            var text = textInput.value;
-            ctx.font = '30px Arial';
-            ctx.fillStyle = 'white';
-            ctx.fillText(text, 50, 50);
-        }
+        // Add text
+        var text = new fabric.IText('Tap and Type', {
+            left: 100,
+            top: 100,
+            fontFamily: 'arial',
+            fill: '#333',
+            fontSize: 50
+        });
+        canvas.add(text);
 
-        function saveImage() {
-            var dataURL = canvas.toDataURL('image/png');
-            var link = document.createElement('a');
-            link.download = 'edited-image.png';
-            link.href = dataURL;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        // Make the canvas object (text) selectable and resizable
+        text.set({
+            borderColor: 'red',
+            cornerColor: 'green',
+            cornerSize: 6,
+            transparentCorners: false
+        });
+
+        canvas.on('object:modified', function() {
+            canvas.renderAll();
+        });
 
     </script>
 </body>
