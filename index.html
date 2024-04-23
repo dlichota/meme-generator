@@ -21,6 +21,7 @@
     <canvas id="c" width="500" height="500"></canvas>
 
     <button onclick="saveImage()">Save Image</button>
+    <button onclick="resetCanvas()">Reset</button>
 
     <script>
         var canvas = new fabric.Canvas('c');
@@ -125,6 +126,30 @@
             document.body.appendChild(link);
             link.click(); // Trigger the download
             document.body.removeChild(link); // Clean up
+        }
+
+        function resetCanvas() {
+            // Clear the canvas
+            canvas.clear();
+
+            // Reset the text objects
+            text = new fabric.IText('Tap and Type', {
+                left: 100,
+                top: 100,
+                fontFamily: 'arial',
+                fill: '#333',
+                fontSize: 50
+            });
+            canvas.add(text);
+
+            text2 = new fabric.IText('Tap and Type', {
+                left: 200,
+                top: 200,
+                fontFamily: 'arial',
+                fill: '#333',
+                fontSize: 50
+            });
+            canvas.add(text2);
         }
 
     </script>
