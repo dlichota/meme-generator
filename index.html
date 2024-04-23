@@ -12,15 +12,9 @@
 
 <body>
     <h1>Meme Generator</h1>
-    <!--<div id="template-selectors"></div>
-        <button id="download">Download Meme</button>
-        <canvas id="canvas"></canvas>
-        <script
-            type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"
-        ></script>
-        <script src="./js/index.js" type="module"></script>-->
+
     <input type="file" id="imageLoader" name="imageLoader" />
+    <input type="color" onchange="changeTextColor(this.value)">
     <script>
         function updateTextColor(picker) {
             document.getElementById('textInput').style.color = picker.value;
@@ -31,6 +25,7 @@
 
     <script>
         var canvas = new fabric.Canvas('c');
+        var text; // Declare text variable outside to make it globally accessible
 
         document.getElementById('imageLoader').addEventListener('change', function(e) {
             var reader = new FileReader();
@@ -49,15 +44,13 @@
                     canvas.centerObject(image);
                     canvas.add(image);
                     canvas.renderAll();
-                    // Make the image non-selectable
-                    image.selectable = false;
                 }
             }
             reader.readAsDataURL(e.target.files[0]);
         });
 
-        // Add text
-        var text = new fabric.IText('Tap and Type', {
+        // Add text after the image has been added to ensure it's on top
+        text = new fabric.IText('Tap and Type', {
             left: 100,
             top: 100,
             fontFamily: 'arial',
