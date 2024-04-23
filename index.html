@@ -1,21 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Meme Generator</title>
-        <link rel="stylesheet" href="./css/styles.css" />
-    </head>
-    <body>
-        <h1>Meme Generator</h1>
-        <div id="template-selectors"></div>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meme Generator</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body>
+    <h1>Meme Generator</h1>
+    <!--<div id="template-selectors"></div>
         <button id="download">Download Meme</button>
         <canvas id="canvas"></canvas>
         <script
             type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"
         ></script>
-        <script src="./js/index.js" type="module"></script>
-    </body>
+        <script src="./js/index.js" type="module"></script>-->
+    <input type="file" id="imageLoader" name="imageLoader" />
+    <canvas id="imageCanvas"></canvas>
+    <button id="saveBtn">Save Image</button>
+
+    <script>
+        var imageLoader = document.getElementById('imageLoader');
+        var canvas = document.getElementById('imageCanvas');
+        var ctx = canvas.getContext('2d');
+        var saveBtn = document.getElementById('saveBtn');
+
+        imageLoader.addEventListener('change', handleImage, false);
+        saveBtn.addEventListener('click', saveImage, false);
+
+        function handleImage(e) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var img = new Image();
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    ctx.font = '30px Arial';
+                    ctx.fillStyle = 'white';
+                    ctx.fillText('Your Text Here', 50, 50);
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function saveImage() {
+            var dataURL = canvas.toDataURL('image/png');
+            var link = document.createElement('a');
+            link.download = 'edited-image.png';
+            link.href = dataURL;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+    </script>
+</body>
+
 </html>
