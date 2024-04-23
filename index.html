@@ -42,22 +42,22 @@
                     canvas.centerObject(image);
                     canvas.add(image);
                     canvas.renderAll();
-
-                    // Add text after the image has been added to ensure it's on top
-                    text = new fabric.IText('Tap and Type', {
-                        left: 100,
-                        top: 100,
-                        fontFamily: 'arial',
-                        fill: '#333',
-                        fontSize: 50
-                    });
-                    canvas.add(text);
-                    text.bringToFront();
-                    canvas.renderAll();
                 }
             }
             reader.readAsDataURL(e.target.files[0]);
         });
+
+        // Add text after the image has been added to ensure it's on top
+        text = new fabric.IText('Tap and Type', {
+            left: 100,
+            top: 100,
+            fontFamily: 'arial',
+            fill: '#333',
+            fontSize: 50
+        });
+        canvas.add(text);
+        text.bringToFront();
+        canvas.renderAll();
 
         // Make the canvas object (text) selectable and resizable
         text.set({
