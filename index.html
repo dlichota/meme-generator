@@ -42,6 +42,8 @@
                     canvas.centerObject(image);
                     canvas.add(image);
                     canvas.renderAll();
+                    // Make the image non-selectable
+                    image.selectable = false;
                 }
             }
             reader.readAsDataURL(e.target.files[0]);
