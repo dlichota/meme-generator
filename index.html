@@ -83,7 +83,7 @@
 
         function saveImage() {
             // Ensure all objects are rendered in their current state
-            canvas.deactivateAll().renderAll();
+            canvas.discardActiveObject().renderAll();
 
             // Convert the canvas to a data URL
             var dataURL = canvas.toDataURL('image/png');
