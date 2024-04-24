@@ -129,6 +129,24 @@
             document.body.removeChild(link); // Clean up
         }
 
+        function saveAsJson() {
+            // Get canvas state as JSON
+            var json = JSON.stringify(canvas.toJSON());
+
+            // Create a blob from the JSON string
+            var blob = new Blob([json], {
+                type: "application/json"
+            });
+
+            // Create a link element for download
+            var link = document.createElement('a');
+            link.download = 'canvas.json'; // Set the download filename
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click(); // Trigger the download
+            document.body.removeChild(link); // Clean up
+        }
+
 
         function resetCanvas() {
             // Clear the canvas
