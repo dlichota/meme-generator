@@ -29,152 +29,162 @@
         var text; // Declare text variable outside to make it globally accessible
         var text2;
         document.getElementById('imageLoader').addEventListener('change', function(e) {
-            var reader = new FileReader();
-            reader.onload = function(event) {
-                var imgObj = new Image();
-                imgObj.src = event.target.result;
-                imgObj.onload = function() {
-                    var image = new fabric.Image(imgObj);
-                    image.scaleToWidth(canvas.width);
-                    image.set({
-                        angle: 0,
-                        padding: 10,
-                        cornerSize: 10,
-                        selectable: false, // Make the image non-selectable
-                        evented: false // Make the image non-clickable
-                    });
-                    canvas.centerObject(image);
-                    canvas.add(image);
-                    canvas.renderAll();
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                            var imgObj = new Image();
+                            imgObj.src = event.target.result;
+                            imgObj.onload = function() {
+                                    var image = new fabric.Image(imgObj);
+                                    image.scaleToWidth(canvas.width);
+                                    image.set({
+                                        angle: 0,
+                                        padding: 10,
+                                        cornerSize: 10,
+                                        selectable: false, // Make the image non-selectable
+                                        evented: false // Make the image non-clickable
+                                    });
+                                    canvas.centerObject(image);
+                                    canvas.add(image);
+                                    canvas.renderAll();
 
-                    // Add text after the image has been added to ensure it's on top
-                    text = new fabric.IText('Tap and Type', {
-                        left: 100,
-                        top: 100,
-                        fontFamily: 'arial',
-                        fill: '#333',
-                        fontSize: 50
-                    });
-                    canvas.add(text);
-                    text.bringToFront();
-                    canvas.renderAll();
+                                    // Add text after the image has been added to ensure it's on top
+                                    text = new fabric.IText('Tap and Type', {
+                                        left: 100,
+                                        top: 100,
+                                        fontFamily: 'arial',
+                                        fill: '#333',
+                                        fontSize: 50
+                                    });
+                                    canvas.add(text);
+                                    text.bringToFront();
+                                    canvas.on('mouse:down', function(options) {
+                                                // Check if the clicked object is the textbox
+                                                if (options.target === textbox) {
+                                                    // Select all text in the textbox
+                                                    textbox.selectAll();
+                                                    canvas.renderAll();
 
-                    text2 = new fabric.IText('Tap and Type', {
-                        left: 200,
-                        top: 200,
-                        fontFamily: 'arial',
-                        fill: '#333',
-                        fontSize: 50
-                    });
-                    canvas.add(text2);
-                    text2.bringToFront();
-                    canvas.renderAll();
-                }
-            }
-            reader.readAsDataURL(e.target.files[0]);
-        });
+                                                    text2 = new fabric.IText('Tap and Type', {
+                                                        left: 200,
+                                                        top: 200,
+                                                        fontFamily: 'arial',
+                                                        fill: '#333',
+                                                        fontSize: 50
+                                                    });
+                                                    canvas.add(text2);
+                                                    canvas.on('mouse:down', function(options) {
+                                                            // Check if the clicked object is the textbox
+                                                            if (options.target === textbox) {
+                                                                // Select all text in the textbox
+                                                                textbox.selectAll();
+                                                                text2.bringToFront();
+                                                                canvas.renderAll();
+                                                            }
+                                                        }
+                                                        reader.readAsDataURL(e.target.files[0]);
+                                                    });
 
-        // Make the canvas object (text) selectable and resizable
-        text.set({
-            borderColor: 'red',
-            cornerColor: 'green',
-            cornerSize: 10,
-            transparentCorners: false
-        });
+                                                // Make the canvas object (text) selectable and resizable
+                                                text.set({
+                                                    borderColor: 'red',
+                                                    cornerColor: 'green',
+                                                    cornerSize: 10,
+                                                    transparentCorners: false
+                                                });
 
-        text2.set({
-            borderColor: 'red',
-            cornerColor: 'green',
-            cornerSize: 10,
-            transparentCorners: false
-        });
+                                                text2.set({
+                                                    borderColor: 'red',
+                                                    cornerColor: 'green',
+                                                    cornerSize: 10,
+                                                    transparentCorners: false
+                                                });
 
-        // Function to change text color
-        function changeTextColor(value) {
-            if (text) {
-                text.set({
-                    fill: value
-                });
-                canvas.renderAll();
-            }
-        }
+                                                // Function to change text color
+                                                function changeTextColor(value) {
+                                                    if (text) {
+                                                        text.set({
+                                                            fill: value
+                                                        });
+                                                        canvas.renderAll();
+                                                    }
+                                                }
 
-        // Function to change second text color
-        function changeTextColor2(value) {
-            if (text2) {
-                text2.set({
-                    fill: value
-                });
-                canvas.renderAll();
-            }
-        }
+                                                // Function to change second text color
+                                                function changeTextColor2(value) {
+                                                    if (text2) {
+                                                        text2.set({
+                                                            fill: value
+                                                        });
+                                                        canvas.renderAll();
+                                                    }
+                                                }
 
-        canvas.on('object:modified', function() {
-            canvas.renderAll();
-        });
+                                                canvas.on('object:modified', function() {
+                                                    canvas.renderAll();
+                                                });
 
-        function saveImage() {
-            // Ensure all objects are rendered in their current state
-            canvas.discardActiveObject().renderAll();
+                                                function saveImage() {
+                                                    // Ensure all objects are rendered in their current state
+                                                    canvas.discardActiveObject().renderAll();
 
-            // Convert the canvas to a data URL
-            var dataURL = canvas.toDataURL('image/png');
+                                                    // Convert the canvas to a data URL
+                                                    var dataURL = canvas.toDataURL('image/png');
 
-            // Create a link element for download
-            var link = document.createElement('a');
-            link.download = 'custom-image.png'; // Set the download filename
-            link.href = dataURL;
-            document.body.appendChild(link);
-            link.click(); // Trigger the download
-            document.body.removeChild(link); // Clean up
-        }
+                                                    // Create a link element for download
+                                                    var link = document.createElement('a');
+                                                    link.download = 'custom-image.png'; // Set the download filename
+                                                    link.href = dataURL;
+                                                    document.body.appendChild(link);
+                                                    link.click(); // Trigger the download
+                                                    document.body.removeChild(link); // Clean up
+                                                }
 
-        function saveAsJson() {
-            // Get canvas state as JSON
-            var json = JSON.stringify(canvas.toJSON());
+                                                function saveAsJson() {
+                                                    // Get canvas state as JSON
+                                                    var json = JSON.stringify(canvas.toJSON());
 
-            // Create a blob from the JSON string
-            var blob = new Blob([json], {
-                type: "application/json"
-            });
+                                                    // Create a blob from the JSON string
+                                                    var blob = new Blob([json], {
+                                                        type: "application/json"
+                                                    });
 
-            // Create a link element for download
-            var link = document.createElement('a');
-            link.download = 'canvas.json'; // Set the download filename
-            link.href = URL.createObjectURL(blob);
-            document.body.appendChild(link);
-            link.click(); // Trigger the download
-            document.body.removeChild(link); // Clean up
-        }
+                                                    // Create a link element for download
+                                                    var link = document.createElement('a');
+                                                    link.download = 'canvas.json'; // Set the download filename
+                                                    link.href = URL.createObjectURL(blob);
+                                                    document.body.appendChild(link);
+                                                    link.click(); // Trigger the download
+                                                    document.body.removeChild(link); // Clean up
+                                                }
 
 
-        function resetCanvas() {
-            // Clear the canvas
-            canvas.clear();
+                                                function resetCanvas() {
+                                                    // Clear the canvas
+                                                    canvas.clear();
 
-            // Reset the text objects
-            text = new fabric.IText('Tap and Type', {
-                left: 100,
-                top: 100,
-                fontFamily: 'arial',
-                fill: '#333',
-                fontSize: 50
-            });
-            canvas.add(text);
+                                                    // Reset the text objects
+                                                    text = new fabric.IText('Tap and Type', {
+                                                        left: 100,
+                                                        top: 100,
+                                                        fontFamily: 'arial',
+                                                        fill: '#333',
+                                                        fontSize: 50
+                                                    });
+                                                    canvas.add(text);
 
-            text2 = new fabric.IText('Tap and Type', {
-                left: 200,
-                top: 200,
-                fontFamily: 'arial',
-                fill: '#333',
-                fontSize: 50
-            });
-            canvas.add(text2);
+                                                    text2 = new fabric.IText('Tap and Type', {
+                                                        left: 200,
+                                                        top: 200,
+                                                        fontFamily: 'arial',
+                                                        fill: '#333',
+                                                        fontSize: 50
+                                                    });
+                                                    canvas.add(text2);
 
-            // Clear the text fields
-            document.getElementById('textColorPicker').value = '';
-            document.getElementById('textColorPicker2').value = '';
-        }
+                                                    // Clear the text fields
+                                                    document.getElementById('textColorPicker').value = '';
+                                                    document.getElementById('textColorPicker2').value = '';
+                                                }
 
     </script>
 
