@@ -21,6 +21,7 @@
     <canvas id="c" width="500" height="500"></canvas>
 
     <button onclick="saveImage()">Save Image</button>
+    <button onclick="saveAsJson()">Save as JSON</button>
     <button onclick="resetCanvas()">Reset</button>
 
     <script>
@@ -127,6 +128,7 @@
             link.click(); // Trigger the download
             document.body.removeChild(link); // Clean up
         }
+
 
         function resetCanvas() {
             // Clear the canvas
