@@ -73,23 +73,32 @@
         canvas.add(text2);
 
         // Add a 'mouse:down' event listener to the canvas for the first text object
+        var activeObject;
+        var timeout;
+
         canvas.on('mouse:down', function(options) {
-            if (options.target === text) {
-                // Enter editing mode and select all text in the textbox
-                text.enterEditing();
-                text.selectAll();
-                canvas.renderAll();
+            if (options.target) {
+                activeObject = options.target;
+                timeout = setTimeout(function() {
+                    if (activeObject === text) {
+                        text.enterEditing();
+                        text.selectAll();
+                        canvas.renderAll();
+                    } else if (activeObject === text2) {
+                        text2.enterEditing();
+                        text2.selectAll();
+                        canvas.renderAll();
+                    }
+                }, 500); // Delay of 500ms
             }
         });
 
-        // Add a 'mouse:down' event listener to the canvas for the second text object
-        canvas.on('mouse:down', function(options) {
-            if (options.target === text2) {
-                // Enter editing mode and select all text in the textbox
-                text2.enterEditing();
-                text2.selectAll();
-                canvas.renderAll();
-            }
+        canvas.on('mouse:move', function() {
+            clearTimeout(timeout);
+        });
+
+        canvas.on('mouse:up', function() {
+            clearTimeout(timeout);
         });
 
         // Make the canvas object (text) selectable and resizable
